@@ -5,12 +5,10 @@ import db
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Rutas de la aplicación
 @app.route("/")
 def index():
     return render_template("index.html", usuario=session.get("usuario"))
 
-# Ruta para buscar la OF
 @app.route("/login", methods=["POST"])
 def login():
     """Guarda el usuario/correo introducido en el popup inicial, en sesión."""
@@ -21,7 +19,6 @@ def login():
     session["usuario"] = usuario
     return jsonify({"ok": True})
 
-# Ruta para buscar la OF
 @app.route("/buscar_of", methods=["POST"])
 def buscar_of():
     if "usuario" not in session:
@@ -35,9 +32,8 @@ def buscar_of():
     filas = db.buscar_of(numero_of)
     if not filas:
         return jsonify({"ok": False, "error": f"No se ha encontrado la OF {numero_of}"}), 404
-    
+
     # Si hay más de una línea para la misma OF, de momento tomamos la primera
-    # (ajustar aquí si en tu operativa una OF puede tener varias líneas a la vez)
     fila = filas[0]
 
     lista_series = []
@@ -60,24 +56,28 @@ def buscar_of():
         }
     })
 
-# Ruta para guardar el cierre de la OF
 @app.route("/guardar", methods=["POST"])
 def guardar():
     if "usuario" not in session:
         return jsonify({"ok": False, "error": "Sesión no iniciada"}), 401
-    
+
     data = request.get_json()
-    numero_of = data.get("numero_of")
+    numero_of = (data.get("numero_of") or "").strip()
     linea = data.get("linea")
-    articulo = data.get("articulo")
+    articulo = (data.get("articulo") or "").strip()
     nserie = (data.get("nserie") or "").strip()
     series_validas = data.get("series_validas") or []
 
+    if not numero_of or not linea or not articulo:
+        return jsonify({"ok": False, "error": "Faltan datos obligatorios"}), 400
+
     # Si la OF requiere serie, validar que la introducida esté en la lista
     if series_validas:
+        if not nserie:
+            return jsonify({"ok": False, "error": "Debes informar el número de serie"}), 400
         if nserie not in series_validas:
-            return jsonify({"ok": False, "error": "Número de serie no válido para esta OF"})
-        
+            return jsonify({"ok": False, "error": "Número de serie no válido para esta OF"}), 400
+
     db.guardar_cierre(
         numero_of=numero_of,
         linea=linea,
@@ -88,7 +88,5 @@ def guardar():
 
     return jsonify({"ok": True, "mensaje": "Cierre guardado correctamente"})
 
-
 if __name__ == "__main__":
-    # Solo para desarrollo/pruebas. Para producción, ver el paso 10 (waitress).
     app.run(host="0.0.0.0", port=5002, debug=True)

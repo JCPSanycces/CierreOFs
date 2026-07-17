@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
-    <!-- Popup de login: se muestra automáticamente si no hay usuario en sesión -->
+    <!-- Popup de login -->
     <div id="modal-login" class="modal-overlay" style="display: {{ 'none' if usuario else 'flex' }};">
         <div class="modal-box">
             <h2>Identifícate</h2>
@@ -21,18 +21,19 @@
     <main class="contenedor">
         <h1>Cierre de Orden de Fabricación</h1>
         <p class="usuario-actual">Usuario: <span id="usuario-actual">{{ usuario or '' }}</span></p>
+
         <!-- Paso A: leer/escribir número de OF -->
         <section id="bloque-of">
             <label for="input-of">Número de OF</label>
             <div class="input-con-boton">
                 <input type="text" id="input-of" placeholder="Ej: OF112612269" autofocus>
-                <button id="btn-camara-of" onclick="abrirCamara('of')">􀀀</button>
+                <button id="btn-camara-of" onclick="abrirCamara('of')">📷</button>
             </div>
             <button id="btn-buscar" onclick="buscarOF()">Buscar</button>
             <p id="of-error" class="error-text"></p>
         </section>
 
-        <!-- Bloque de información general (oculto hasta tener resultados) -->
+        <!-- Bloque de información general -->
         <section id="bloque-info" style="display:none;">
             <h2>Información general</h2>
             <table class="tabla-info">
@@ -46,35 +47,21 @@
                 <tr><td>Cantidad lanzada</td><td id="info-cantidad"></td></tr>
             </table>
 
-            <!-- Bloque de información general (oculto hasta tener resultados) -->
-             <section id="bloque-info" style="display:none;">
-                <h2>Información general</h2>
-                <table class="tabla-info">
-                    <tr><td>Número OF</td><td id="info-numero_of"></td></tr>
-                    <tr><td>Estado</td><td id="info-estado"></td></tr>
-                    <tr><td>Fecha inicio</td><td id="info-fecha_inicio"></td></tr>
-                    <tr><td>Artículo</td><td id="info-articulo"></td></tr>
-                    <tr><td>Descripción</td><td id="info-descripcion"></td></tr>
-                    <tr><td>EAN</td><td id="info-ean"></td></tr>
-                    <tr><td>Línea</td><td id="info-linea"></td></tr>
-                    <tr><td>Cantidad lanzada</td><td id="info-cantidad"></td></tr>
-             </section>
-
-             <!-- Bloque de número de serie: solo se muestra si la OF lo requiere -->
-             <div id="bloque-serie" style="display:none;">
+            <!-- Bloque de número de serie -->
+            <div id="bloque-serie" style="display:none;">
                 <label for="input-serie">Número de serie</label>
                 <div class="input-con-boton">
                     <input type="text" id="input-serie" placeholder="Escanea o escribe el nº de serie">
-                    <button onclick="abrirCamara('serie')">􀀀</button>
+                    <button onclick="abrirCamara('serie')">📷</button>
                 </div>
-             </div>
+            </div>
 
-             <button id="btn-guardar" onclick="guardarCierre()">Guardar cierre</button>
-             <p id="guardar-mensaje"></p>
-         </section>
+            <button id="btn-guardar" onclick="guardarCierre()">Guardar cierre</button>
+            <p id="guardar-mensaje"></p>
+        </section>
     </main>
 
-    <!-- Modal de cámara para escaneo QR/código de barras -->
+    <!-- Modal de cámara -->
     <div id="modal-camara" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <h2>Escanea el código</h2>
