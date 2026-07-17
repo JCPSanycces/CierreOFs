@@ -97,7 +97,7 @@ function pintarInfo(of) {
     document.getElementById("info-descripcion").innerText = of.descripcion || "";
     document.getElementById("info-ean").innerText = of.ean || "";
     document.getElementById("info-linea").innerText = of.linea || "";
-    document.getElementById("info-cantidad").innerText = of.cantidad || "";
+    document.getElementById("info-cantidad").innerText = Number(of.cantidad).toFixed(2) || "";
 
     document.getElementById("bloque-info").style.display = "block";
     document.getElementById("bloque-serie").style.display = of.requiere_serie ? "block" : "none";

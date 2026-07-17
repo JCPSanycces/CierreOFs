@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify
 from config import Config
 import db
+from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -36,21 +37,33 @@ def buscar_of():
     # Si hay más de una línea para la misma OF, de momento tomamos la primera
     fila = filas[0]
 
+    # Extraer lista de series válidas
     lista_series = []
     if fila.get("NUM_SERIE_OF"):
         lista_series = [s.strip() for s in fila["NUM_SERIE_OF"].split(",")]
+
+    # Formatear fecha
+    fecha_inicio = ""
+    if fila.get("FECHAINI_OF_0"):
+        if hasattr(fila["FECHAINI_OF_0"], "strftime"):
+            fecha_inicio = fila["FECHAINI_OF_0"].strftime("%d/%m/%Y")
+        else:
+            fecha_inicio = str(fila["FECHAINI_OF_0"])
+
+    # Formatear cantidad con 2 decimales
+    cantidad = round(float(fila["QTY_LANZADA_0"]), 2) if fila.get("QTY_LANZADA_0") is not None else None
 
     return jsonify({
         "ok": True,
         "of": {
             "numero_of": fila["NUM_OF_0"],
             "estado": fila["ESTADO_OF_0"],
-            "fecha_inicio": str(fila["FECHAINI_OF_0"]) if fila["FECHAINI_OF_0"] else "",
+            "fecha_inicio": fecha_inicio,
             "articulo": fila["CODART_OF_0"],
             "descripcion": fila["DESART_OF_0"],
             "ean": fila["EANART_OF_0"],
             "linea": fila["LINEA_OF_0"],
-            "cantidad": fila["QTY_LANZADA_0"],
+            "cantidad": cantidad,
             "requiere_serie": len(lista_series) > 0,
             "series_validas": lista_series,
         }
