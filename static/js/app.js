@@ -55,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
 function buscarOF() {
     const numeroOF = document.getElementById("input-of").value.trim().toUpperCase();
     document.getElementById("input-of").value = numeroOF;
@@ -71,6 +70,7 @@ function buscarOF() {
     })
     .then(r => r.json())
     .then(data => {
+
         if (!data.ok) {
             sonidoError.play().catch(() => {});
             document.getElementById("of-error").innerText = data.error || "Error buscando la OF";
@@ -90,6 +90,7 @@ function buscarOF() {
 }
 
 function pintarInfo(of) {
+
     document.getElementById("info-numero_of").innerText = of.numero_of || "";
     document.getElementById("info-estado").innerText = of.estado || "";
     document.getElementById("info-fecha_inicio").innerText = of.fecha_inicio || "";
@@ -97,13 +98,21 @@ function pintarInfo(of) {
     document.getElementById("info-descripcion").innerText = of.descripcion || "";
     document.getElementById("info-ean").innerText = of.ean || "";
     document.getElementById("info-linea").innerText = of.linea || "";
-    document.getElementById("info-cantidad").innerText = Number(of.cantidad).toFixed(2) || "";
+    document.getElementById("info-cantidad").innerText = Number(of.cantidad).toFixed(2);
 
     document.getElementById("bloque-info").style.display = "block";
-    document.getElementById("bloque-serie").style.display = of.requiere_serie ? "block" : "none";
-    document.getElementById("input-serie").value = "";
+
+    if (of.requiere_serie) {
+        document.getElementById("bloque-serie").style.display = "block";
+        document.getElementById("input-serie").value = "";
+        document.getElementById("input-serie").focus();
+    } else {
+        document.getElementById("bloque-serie").style.display = "none";
+    }
+
     document.getElementById("guardar-mensaje").innerText = "";
 }
+
 
 function guardarCierre() {
     if (!ofActual) return;

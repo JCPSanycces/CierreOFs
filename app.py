@@ -39,8 +39,8 @@ def buscar_of():
 
     # Extraer lista de series válidas
     lista_series = []
-    if fila.get("NUM_SERIE_OF"):
-        lista_series = [s.strip() for s in fila["NUM_SERIE_OF"].split(",")]
+    if fila.get("NUM_SERIE_OF_0"):
+        lista_series = [s.strip() for s in fila["NUM_SERIE_OF_0"].split(",")]
 
     # Formatear fecha
     fecha_inicio = ""
