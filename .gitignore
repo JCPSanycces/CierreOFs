@@ -17,7 +17,9 @@ migrations/
 # certs
 certs/
 
-/*.bat
+"C:\Program Files\Flask\Cierre OFs Sany\*.bat"
 
-/run_waitress.py
+"C:\Program Files\Flask\Cierre OFs Sany\run_waitress.py"
+
+
 
