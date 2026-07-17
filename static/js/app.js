@@ -39,10 +39,23 @@ document.addEventListener("DOMContentLoaded", () => {
             buscarOF();
         }
     });
+
+    inputOF.addEventListener("input", function () {
+        this.value = this.value.toUpperCase();
+    });
+
+    const inputSerie = document.getElementById("input-serie");
+    if (inputSerie) {
+        inputSerie.addEventListener("input", function () {
+            this.value = this.value.toUpperCase();
+        });
+    }
 });
 
+
 function buscarOF() {
-    const numeroOF = document.getElementById("input-of").value.trim();
+    const numeroOF = document.getElementById("input-of").value.trim().toUpperCase();
+    document.getElementById("input-of").value = numeroOF;
     document.getElementById("of-error").innerText = "";
     document.getElementById("guardar-mensaje").innerText = "";
 

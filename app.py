@@ -43,14 +43,14 @@ def buscar_of():
     return jsonify({
         "ok": True,
         "of": {
-            "numero_of": fila["NUM_OF"],
-            "estado": fila["ESTADO_OF"],
-            "fecha_inicio": str(fila["FECHAINI_OF"]) if fila["FECHAINI_OF"] else "",
-            "articulo": fila["CODART_OF"],
-            "descripcion": fila["DESART_OF"],
-            "ean": fila["EANART_OF"],
-            "linea": fila["LINEA_OF"],
-            "cantidad": fila["QTY_LANZADA"],
+            "numero_of": fila["NUM_OF_0"],
+            "estado": fila["ESTADO_OF_0"],
+            "fecha_inicio": str(fila["FECHAINI_OF_0"]) if fila["FECHAINI_OF_0"] else "",
+            "articulo": fila["CODART_OF_0"],
+            "descripcion": fila["DESART_OF_0"],
+            "ean": fila["EANART_OF_0"],
+            "linea": fila["LINEA_OF_0"],
+            "cantidad": fila["QTY_LANZADA_0"],
             "requiere_serie": len(lista_series) > 0,
             "series_validas": lista_series,
         }
