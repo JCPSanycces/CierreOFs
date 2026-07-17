@@ -2,6 +2,9 @@ let ofActual = null;
 let destinoCamara = null;
 let html5QrCode = null;
 
+const sonidoOk = new Audio("/static/sounds/ok.mp3");
+const sonidoError = new Audio("/static/sounds/error.mp3");
+
 // ---------- LOGIN ----------
 function guardarUsuario() {
     const usuario = document.getElementById("input-usuario").value.trim();
@@ -69,6 +72,7 @@ function buscarOF() {
     .then(r => r.json())
     .then(data => {
         if (!data.ok) {
+            sonidoError.play().catch(() => {});
             document.getElementById("of-error").innerText = data.error || "Error buscando la OF";
             document.getElementById("bloque-info").style.display = "none";
             document.getElementById("bloque-serie").style.display = "none";
@@ -76,6 +80,7 @@ function buscarOF() {
             return;
         }
 
+        sonidoOk.play().catch(() => {});
         ofActual = data.of;
         pintarInfo(ofActual);
     })
@@ -127,6 +132,7 @@ function guardarCierre() {
         const msg = document.getElementById("guardar-mensaje");
 
         if (data.ok) {
+            sonidoOk.play().catch(() => {});
             msg.innerText = "✅ " + data.mensaje;
             msg.className = "success-text";
 
@@ -140,6 +146,7 @@ function guardarCierre() {
                 ofActual = null;
             }, 1500);
         } else {
+            sonidoError.play().catch(() => {});
             msg.innerText = "❌ " + (data.error || "Error al guardar");
             msg.className = "error-text";
         }
@@ -166,11 +173,13 @@ function abrirCamara(destino) {
         { fps: 10, qrbox: 250 },
         (textoDecodificado) => {
             if (destinoCamara === "of") {
-                document.getElementById("input-of").value = textoDecodificado;
+                document.getElementById("input-of").value = textoDecodificado.toUpperCase();;
+                sonidoOk.play().catch(() => {});
                 cerrarCamara();
                 buscarOF();
             } else {
-                document.getElementById("input-serie").value = textoDecodificado;
+                document.getElementById("input-serie").value = textoDecodificado.toUpperCase();
+                sonidoOk.play().catch(() => {});
                 cerrarCamara();
             }
         },
