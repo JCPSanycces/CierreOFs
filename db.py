@@ -59,3 +59,42 @@ def guardar_cierre(numero_of, linea, articulo, nserie, correo_usuario):
         conn.commit()
     finally:
         conn.close()
+
+# obtener los datos de la OF desde ZVCIERREOF
+def obtener_datos_of(numero_of: str):
+    """
+    Devuelve una sola fila con los datos de la OF.
+    """
+    db_name = Config.DB_DATABASE
+    schema = Config.SQL_SCHEMA
+    sql = f"SELECT * FROM {db_name}.{schema}.ZVCIERREOF WHERE NUM_OF_0 = ?"
+
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql, numero_of)
+        columnas = [col[0] for col in cursor.description]
+        fila = cursor.fetchone()
+        if not fila:
+            return None
+        return dict(zip(columnas, fila))
+    finally:
+        conn.close()
+
+# contar el número de cierres de una OF en ZAPPCIERREOF
+def contar_cierres_of(numero_of: str):
+    db_name = Config.DB_DATABASE
+    schema = Config.SQL_SCHEMA
+    sql = f"""
+        SELECT COUNT(*)
+        FROM {db_name}.{schema}.ZAPPCIERREOF
+        WHERE MFGNUM_0 = ?
+    """
+
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql, numero_of)
+        return cursor.fetchone()[0]
+    finally:
+        conn.close()

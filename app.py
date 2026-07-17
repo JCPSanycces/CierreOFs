@@ -40,7 +40,18 @@ def buscar_of():
     # Extraer lista de series válidas
     lista_series = []
     if fila.get("NUM_SERIE_OF_0"):
-        lista_series = [s.strip() for s in fila["NUM_SERIE_OF_0"].split(",")]
+        lista_series = [s.strip() for s in fila["NUM_SERIE_OF_0"].split(",") if s.strip()]
+
+    # Contar cuántas veces se ha cerrado la OF y cuántas quedan por cerrar
+    max_leidas = len(lista_series) if lista_series else 1
+    ya_leidas = db.contar_cierres_of(numero_of)
+
+    # Si ya se han leído todas las series, no permitir más cierres
+    if ya_leidas >= max_leidas:
+        return jsonify({
+            "ok": False,
+            "error": "Ya no se pueden leer más OF's porque se ha alcanzado el número máximo"
+        }), 409
 
     # Formatear fecha
     fecha_inicio = ""

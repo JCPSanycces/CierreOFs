@@ -70,7 +70,6 @@ function buscarOF() {
     })
     .then(r => r.json())
     .then(data => {
-
         if (!data.ok) {
             sonidoError.play().catch(() => {});
             document.getElementById("of-error").innerText = data.error || "Error buscando la OF";
