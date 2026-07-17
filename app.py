@@ -102,6 +102,14 @@ def guardar():
         if nserie not in series_validas:
             return jsonify({"ok": False, "error": "Número de serie no válido para esta OF"}), 400
 
+    # Validar que la OF con ese número de serie no haya sido leída antes    
+    existe = db.existe_cierre(numero_of, nserie)
+    if existe:
+        return jsonify({
+            "ok": False,
+            "error": "Ese número de serie ya ha sido leído anteriormente"
+        }), 409
+
     db.guardar_cierre(
         numero_of=numero_of,
         linea=linea,

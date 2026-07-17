@@ -98,3 +98,22 @@ def contar_cierres_of(numero_of: str):
         return cursor.fetchone()[0]
     finally:
         conn.close()
+
+
+# verificar si ya existe un cierre para una OF con un número de serie dado
+def existe_cierre(numero_of, nserie):
+    db_name = Config.DB_DATABASE
+    schema = Config.SQL_SCHEMA
+    sql = f"""
+        SELECT TOP 1 1
+        FROM {db_name}.{schema}.ZAPPCIERREOF
+        WHERE MFGNUM_0 = ?
+          AND NSERIE_0 = ?
+    """
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql, numero_of, nserie)
+        return cursor.fetchone() is not None
+    finally:
+        conn.close()
