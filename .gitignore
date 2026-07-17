@@ -15,4 +15,5 @@ migrations/
 .env
 
 # static/uploads
-app/static/uploads/
+certs/
+
