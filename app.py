@@ -32,7 +32,7 @@ def buscar_of():
 
     filas = db.buscar_of(numero_of)
     if not filas:
-        return jsonify({"ok": False, "error": f"No se ha encontrado la OF {numero_of}"}), 404
+        return jsonify({"ok": False, "error": f"No se ha encontrado la {numero_of}"}), 404
 
     # Si hay más de una línea para la misma OF, de momento tomamos la primera
     fila = filas[0]
