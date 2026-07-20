@@ -21,6 +21,9 @@ function guardarUsuario() {
     .then(r => r.json())
     .then(data => {
         if (data.ok) {
+            // Guardar el usuario en el dispositivo
+            localStorage.setItem("usuario_app_of", usuario);
+
             document.getElementById("modal-login").style.display = "none";
             document.getElementById("usuario-actual").innerText = usuario;
             document.getElementById("input-of").focus();
@@ -32,6 +35,33 @@ function guardarUsuario() {
         document.getElementById("login-error").innerText = "Error de conexión con el servidor";
     });
 }
+
+// Función para cerrar sesión y eliminar el usuario guardado
+function cerrarSesion() {
+    localStorage.removeItem("usuario_app_of");
+
+    fetch("/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(() => {
+        document.getElementById("input-usuario").value = "";
+        document.getElementById("usuario-actual").innerText = "";
+        document.getElementById("modal-login").style.display = "flex";
+
+        // Limpiar pantalla
+        document.getElementById("input-of").value = "";
+        document.getElementById("input-serie").value = "";
+        document.getElementById("bloque-info").style.display = "none";
+        document.getElementById("bloque-serie").style.display = "none";
+        document.getElementById("of-error").innerText = "";
+        document.getElementById("guardar-mensaje").innerText = "";
+
+        ofActual = null;
+        document.getElementById("input-usuario").focus();
+    });
+}
+
 
 // ---------- BUSCAR OF ----------
 document.addEventListener("DOMContentLoaded", () => {
@@ -51,6 +81,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (inputSerie) {
         inputSerie.addEventListener("input", function () {
             this.value = this.value.toUpperCase();
+        });
+    }
+
+    // Recuperar usuario guardado en el dispositivo
+    const usuarioGuardado = localStorage.getItem("usuario_app_of");
+    if (usuarioGuardado) {
+        document.getElementById("input-usuario").value = usuarioGuardado;
+        document.getElementById("modal-login").style.display = "none";
+        document.getElementById("usuario-actual").innerText = usuarioGuardado;
+        document.getElementById("input-of").focus();
+
+        // Importante: enviar también el usuario al backend para abrir sesión
+        fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario: usuarioGuardado })
         });
     }
 });

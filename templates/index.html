@@ -21,6 +21,12 @@
     <main class="contenedor">
         <h1>Cierre de Orden de Fabricación</h1>
         <p class="usuario-actual">Usuario: <span id="usuario-actual">{{ usuario or '' }}</span></p>
+        <div id="mensaje-general" class="mensaje">
+            <!-- Botón para cambiar de usuario -->
+            <button id="btn-cambiar-usuario" type="button" class="btn-secundario" onclick="cerrarSesion()">
+                Cerrar sesión / Cambiar usuario
+            </button>
+        </div>
 
         <!-- Paso A: leer/escribir número de OF -->
         <section id="bloque-of">

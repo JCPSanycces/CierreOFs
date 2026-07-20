@@ -137,3 +137,24 @@ button:hover {
 .modal-box p {
     margin-top: 0;
 }
+
+.btn-secundario {
+    width: auto;
+    background: #6b7280;
+}
+
+.btn-secundario:hover {
+    background: #4b5563;
+}
+
+#btn-cambiar-usuario {
+    display: block;
+    width: auto;
+    min-width: 220px;
+    margin: 12px auto 16px auto;
+    background: #6b7280;
+}
+
+#btn-cambiar-usuario:hover {
+    background: #4b5563;
+}

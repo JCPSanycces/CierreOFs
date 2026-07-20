@@ -120,5 +120,11 @@ def guardar():
 
     return jsonify({"ok": True, "mensaje": "Cierre guardado correctamente"})
 
+# Ruta para cerrar sesión y eliminar el usuario de la sesión
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.pop("usuario", None)
+    return jsonify({"ok": True})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5002, debug=True)
