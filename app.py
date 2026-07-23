@@ -28,7 +28,7 @@ def buscar_of():
     data = request.get_json()
     numero_of = (data.get("numero_of") or "").strip().upper()
     if not numero_of:
-        return jsonify({"ok": False, "error": "Número de OF vacío"}), 400
+        return jsonify({"ok": False, "error": "Número de orden vacío"}), 400
 
     filas = db.buscar_of(numero_of)
     if not filas:
@@ -50,7 +50,7 @@ def buscar_of():
     if ya_leidas >= max_leidas:
         return jsonify({
             "ok": False,
-            "error": "Ya no se pueden leer más OF's porque se ha alcanzado el número máximo"
+            "error": "Ya no se pueden leer más órdenes porque se ha alcanzado el número máximo"
         }), 409
 
     # Formatear fecha
@@ -100,7 +100,7 @@ def guardar():
         if not nserie:
             return jsonify({"ok": False, "error": "Debes informar el número de serie"}), 400
         if nserie not in series_validas:
-            return jsonify({"ok": False, "error": "Número de serie no válido para esta OF"}), 400
+            return jsonify({"ok": False, "error": "Número de serie no válido para esta orden"}), 400
 
     # Validar que la OF con ese número de serie no haya sido leída antes    
     existe = db.existe_cierre(numero_of, nserie)

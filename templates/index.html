@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cierre de OF</title>
+    <title>Cierre de órdenes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
@@ -30,7 +30,7 @@
 
         <!-- Paso A: leer/escribir número de OF -->
         <section id="bloque-of">
-            <label for="input-of">Número de OF</label>
+            <label for="input-of">Número de orden</label>
             <div class="input-con-boton">
                 <input type="text" id="input-of" placeholder="Ej: OF112612269" autofocus>
                 <button id="btn-camara-of" onclick="abrirCamara('of')">📷</button>
@@ -43,7 +43,7 @@
         <section id="bloque-info" style="display:none;">
             <h2>Información general</h2>
             <table class="tabla-info">
-                <tr><td>Número OF</td><td id="info-numero_of"></td></tr>
+                <tr><td>Número de orden</td><td id="info-numero_of"></td></tr>
                 <tr><td>Estado</td><td id="info-estado"></td></tr>
                 <tr><td>Fecha inicio</td><td id="info-fecha_inicio"></td></tr>
                 <tr><td>Artículo</td><td id="info-articulo"></td></tr>
