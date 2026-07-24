@@ -163,6 +163,7 @@ function guardarCierre() {
     if (!ofActual) return;
 
     const nserie = document.getElementById("input-serie").value.trim();
+    document.getElementById("guardar-mensaje").innerText = "";
 
     if (ofActual.requiere_serie && !nserie) {
         document.getElementById("guardar-mensaje").innerText = "Introduce un número de serie";
@@ -178,7 +179,8 @@ function guardarCierre() {
             linea: ofActual.linea,
             articulo: ofActual.articulo,
             nserie: nserie,
-            series_validas: ofActual.series_validas
+            series_validas: ofActual.series_validas,
+            qty_lanzada: Number(ofActual.cantidad)
         })
     })
     .then(r => r.json())
@@ -201,7 +203,7 @@ function guardarCierre() {
             }, 1500);
         } else {
             sonidoError.play().catch(() => {});
-            msg.innerText = "❌ " + (data.error || "Error al guardar");
+            msg.innerText = (data.error || "Error al guardar");
             msg.className = "error-text";
         }
     })
@@ -227,7 +229,7 @@ function abrirCamara(destino) {
         { fps: 10, qrbox: 250 },
         (textoDecodificado) => {
             if (destinoCamara === "of") {
-                document.getElementById("input-of").value = textoDecodificado.toUpperCase();;
+                document.getElementById("input-of").value = textoDecodificado.toUpperCase();
                 sonidoOk.play().catch(() => {});
                 cerrarCamara();
                 buscarOF();
