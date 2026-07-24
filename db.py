@@ -125,3 +125,21 @@ def incrementar_qty_leida(numero_of):
         conn.commit()
     finally:
         conn.close()
+
+# obtiene el número de cierres de la OF en ZAPPCIERREOF
+def contar_cierres_series(numero_of):
+    db_name = Config.DB_DATABASE
+    schema = Config.SQL_SCHEMA
+    sql = f"""
+        SELECT COUNT(*)
+        FROM {db_name}.{schema}.ZAPPCIERREOF
+        WHERE MFGNUM_0 = ?
+          AND ISNULL(NSERIE_0, '') <> ''
+    """
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql, numero_of)
+        return cursor.fetchone()[0]
+    finally:
+        conn.close()

@@ -34,30 +34,48 @@ def buscar_of():
         return jsonify({"ok": False, "error": "❌ Número de OF vacío"}), 400
 
     try:
-        print("BUSCAR OF:", numero_of)
-
         filas = db.buscar_of(numero_of)
-        print("FILAS DEVUELTAS:", len(filas))
-
         if not filas:
             return jsonify({"ok": False, "error": f"❌ No se ha encontrado la OF {numero_of}"}), 404
 
         fila = filas[0]
-        print("FILA:", fila)
 
+        # Series válidas de la OF
         lista_series = []
         valor_series = fila.get("NUM_SERIE_OF_0")
-        print("NUM_SERIE_OF_0:", valor_series)
-
         if valor_series is not None and str(valor_series).strip() != "":
             lista_series = [s.strip() for s in str(valor_series).split(",") if s.strip()]
 
-        print("LISTA_SERIES:", lista_series)
+        # OF con serie
+        if len(lista_series) > 0:
+            cierres_realizados = db.contar_cierres_series(numero_of)
+            if cierres_realizados >= len(lista_series):
+                return jsonify({
+                    "ok": False,
+                    "error": "❌ Esa orden ya ha sido cerrada por completo"
+                }), 409
 
+        # OF sin serie
+        else:
+            cierre = db.obtener_cierre_of(numero_of)
+            if cierre:
+                qty_leida_actual = float(cierre.get("ZQTYLEIDA_0") or 0)
+                qty_lanzada_actual = float(cierre.get("ZQTYLANZADA_0") or 0)
+                if qty_leida_actual >= qty_lanzada_actual:
+                    return jsonify({
+                        "ok": False,
+                        "error": "❌ Esa orden ya ha sido cerrada por completo"
+                    }), 409
+
+        # Formatear fecha
         fecha_inicio = ""
         if fila.get("FECHAINI_OF_0"):
-            fecha_inicio = fila["FECHAINI_OF_0"].strftime("%d/%m/%Y") if hasattr(fila["FECHAINI_OF_0"], "strftime") else str(fila["FECHAINI_OF_0"])
+            if hasattr(fila["FECHAINI_OF_0"], "strftime"):
+                fecha_inicio = fila["FECHAINI_OF_0"].strftime("%d/%m/%Y")
+            else:
+                fecha_inicio = str(fila["FECHAINI_OF_0"])
 
+        # Formatear cantidad
         cantidad = round(float(fila["QTY_LANZADA_0"]), 2) if fila.get("QTY_LANZADA_0") is not None else None
 
         return jsonify({
