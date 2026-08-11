@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify
 from config import Config
 import db
+import traceback
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -36,7 +37,7 @@ def buscar_of():
     try:
         filas = db.buscar_of(numero_of)
         if not filas:
-            return jsonify({"ok": False, "error": f"❌ No se ha encontrado la OF {numero_of}"}), 404
+            return jsonify({"ok": False, "error": f"❌ No se ha encontrado la {numero_of}"}), 404
 
         fila = filas[0]
 
@@ -94,9 +95,16 @@ def buscar_of():
             }
         })
 
+  #  except Exception as e:
+  #      print("ERROR EN buscar_of:", repr(e))
+  #      return jsonify({"ok": False, "error": "❌ Error de conexión con el servidor"}), 500
+
     except Exception as e:
-        print("ERROR EN buscar_of:", repr(e))
-        return jsonify({"ok": False, "error": "❌ Error de conexión con el servidor"}), 500
+        print("ERROR AL GUARDAR:", repr(e))
+        traceback.print_exc()
+        return jsonify({"ok": False, "error": f"❌ {repr(e)}"}), 500
+
+
 
 @app.route("/guardar", methods=["POST"])
 def guardar():
@@ -173,9 +181,14 @@ def guardar():
             "error": "❌ Ya no se pueden leer más órdenes porque se ha alcanzado el número máximo"
         }), 409
 
+ #   except Exception as e:
+ #       print("ERROR AL GUARDAR:", repr(e))
+ #       return jsonify({"ok": False, "error": "❌ Error de conexión con el servidor"}), 500
+
     except Exception as e:
         print("ERROR AL GUARDAR:", repr(e))
-        return jsonify({"ok": False, "error": "❌ Error de conexión con el servidor"}), 500
+        traceback.print_exc()
+        return jsonify({"ok": False, "error": f"❌ {repr(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5002, debug=True)
