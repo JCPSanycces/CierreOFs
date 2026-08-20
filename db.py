@@ -38,12 +38,12 @@ def guardar_cierre(numero_of, linea, articulo, nserie, correo_usuario, qty_lanza
     sql = f"""
         INSERT INTO {db_name}.{schema}.ZAPPCIERREOF
         (MFGNUM_0, NSERIE_0, ITMREF_0, MFGLIN_0, ZCORREOUSER_0,
-         ZFECHACREA_0, ZHORACREA_0, ZPROCESADO_0,
+         ZFECHACREA_0, ZHORACREA_0, ZPROCESADO_0, ZTODO_0,
          ZQTYLANZADA_0, ZQTYLEIDA_0,
          CREDATTIM_0, UPDDATTIM_0, AUUID_0, CREUSR_0, UPDUSR_0)
         VALUES
         (?, ?, ?, ?, ?,
-         CAST(GETDATE() AS DATE), CAST(GETDATE() AS TIME), 1,
+         CAST(GETDATE() AS DATE), CAST(GETDATE() AS TIME), 1, 2,
          ?, ?,
          GETDATE(), GETDATE(), NEWID(), ?, ?)
     """
@@ -114,6 +114,7 @@ def incrementar_qty_leida(numero_of):
     sql = f"""
         UPDATE {db_name}.{schema}.ZAPPCIERREOF
         SET ZQTYLEIDA_0 = ZQTYLEIDA_0 + 1,
+            ZTODO_0 = 2,
             UPDDATTIM_0 = GETDATE()
         WHERE MFGNUM_0 = ?
           AND ISNULL(NSERIE_0, '') = ''
